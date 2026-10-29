@@ -1,0 +1,131 @@
+<ion-header>
+  <ion-toolbar class="main-toolbar">
+    <div class="toolbar-content">
+      <div>
+        <p class="small-title">GROUP NI KATH</p>
+        <ion-title>Student Profiles</ion-title>
+      </div>
+
+      <div class="logo">IT</div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <section class="hero-section">
+    <div class="hero-text">
+      <p class="welcome-text">Welcome to</p>
+      <h1>Bachelor of Science in Information Technology</h1>
+      <p class="description">
+        Explore the profiles of our
+        <strong>{{ students.length }}</strong>
+        students.
+      </p>
+    </div>
+  </section>
+
+  <div class="search-container">
+    <div class="search-wrap">
+      <img
+        class="search-icon"
+        src="assets/search-right-1507.svg"
+        alt="">
+
+      <ion-searchbar
+        [value]="searchText"
+        (ionInput)="searchText = $event.detail.value ?? ''"
+        placeholder="Dito mo sila hanapin :>"
+        animated="true">
+      </ion-searchbar>
+    </div>
+  </div>
+
+  <section class="students-section">
+    <div class="section-heading">
+      <div>
+        <h2>Our Students</h2>
+        <p>{{ filteredStudents.length }} student(s) found</p>
+      </div>
+    </div>
+
+    <div class="student-grid">
+      @for (student of filteredStudents; track student.id) {
+        <ion-card
+          class="student-card"
+          [class.selected-card]="selectedStudent?.id === student.id">
+          <div class="card-top">
+            <div class="student-avatar">
+              {{ student.name.charAt(0) }}
+            </div>
+
+            <ion-badge
+              [color]="student.gender === 'Male' ? 'primary' : 'secondary'">
+              {{ student.gender }}
+            </ion-badge>
+          </div>
+
+          <ion-card-header>
+            <ion-card-title>{{ student.name }}</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <p class="course">{{ student.course }}</p>
+            <ion-chip>
+              <ion-label>Year {{ student.year }}</ion-label>
+            </ion-chip>
+            <ion-button
+              expand="block"
+              fill="outline"
+              (click)="toggleStudent(student)">
+              {{ selectedStudent?.id === student.id ? 'Hide Profile' : 'View Profile' }}
+            </ion-button>
+          </ion-card-content>
+
+          @if (selectedStudent?.id === student.id) {
+            <ion-card-content class="profile-details">
+              <div class="info-item">
+                <span>Student ID</span>
+                <strong>{{ student.id }}</strong>
+              </div>
+              <div class="info-item">
+                <span>Gender</span>
+                <strong>{{ student.gender }}</strong>
+              </div>
+              <div class="info-item">
+                <span>Course</span>
+                <strong>{{ student.course }}</strong>
+              </div>
+              <div class="info-item">
+                <span>Year Level</span>
+                <strong>Year {{ student.year }}</strong>
+              </div>
+            </ion-card-content>
+          }
+        </ion-card>
+      }
+
+      @if (filteredStudents.length === 0) {
+        <div class="no-results">
+          <h3>No student found</h3>
+          <p>Try searching for another student.</p>
+          <ion-button fill="outline" (click)="clearSearch()">
+            Clear Search
+          </ion-button>
+        </div>
+      } @else {
+        <div class="result-message">
+          Showing
+          <strong>{{ filteredStudents.length }}</strong>
+          of
+          <strong>{{ students.length }}</strong>
+          students
+        </div>
+      }
+    </div>
+  </section>
+
+  <footer>
+    <p>Group ni Kath</p>
+    <span>BSIT 3F</span>
+  </footer>
+</ion-content>
